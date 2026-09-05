@@ -51,9 +51,18 @@ public class NoticiaController {
         if (noticia.getAutor() == null || noticia.getAutor().isBlank())
             return ResponseEntity.status(400).body("Autor não pode estar nulo ou vazio");
 
-//        if (noticiaRepository.hasIgual(noticia)) return ResponseEntity.status(409).body("Já " +
-//                "existe ");
-
         return ResponseEntity.status(201).body(noticiaRepository.cadastrar(noticia));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+        try {
+            noticiaRepository.buscarPorId(id);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+
+        noticiaRepository.deletarNoticia(id);
+        return ResponseEntity.status(204).build();
     }
 }

@@ -54,8 +54,15 @@ public class NoticiaRepository {
     public List<Noticia> buscarTodas() {
         String sql = "SELECT * FROM noticias ORDER BY dataPublicacao DESC";
 
+
         return jdbcTemplate.query(sql,
                 new BeanPropertyRowMapper<>(Noticia.class));
+    }
+
+    public void deletarNoticia(Integer id) {
+        String sql = "DELETE FROM noticias WHERE id = ?";
+
+        jdbcTemplate.update(sql, id);
     }
 
 //    public Boolean hasIgual(Noticia noticia) {
@@ -67,9 +74,9 @@ public class NoticiaRepository {
 //        return quantidade >= 1;
 //    }
 
-//    public Noticia buscarPorId(Integer id) {
-//        String sql = "SELECT * FROM noticias WHERE id = ?";
-//
-//        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Noticia.class), id);
-//    }
+    public Noticia buscarPorId(Integer id) {
+        String sql = "SELECT * FROM noticias WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Noticia.class), id);
+    }
 }
