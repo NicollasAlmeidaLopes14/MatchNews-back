@@ -1,5 +1,7 @@
 package school.sptech.matchnews_back.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public class Noticia {
@@ -10,13 +12,14 @@ public class Noticia {
     private String categoria;
     private String autor;
     private String fonte;
-    private LocalDateTime data;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dataPublicacao;
 
     public Noticia() {
     }
 
     public Noticia(Integer id, String titulo, String resumo, String texto, String categoria,
-                   String urlImagem, String autor, String fonte, LocalDateTime data) {
+                   String autor, String fonte, LocalDateTime dataPublicacao) {
         this.id = id;
         this.titulo = titulo;
         this.resumo = resumo;
@@ -24,7 +27,7 @@ public class Noticia {
         this.categoria = categoria;
         this.autor = autor;
         this.fonte = fonte;
-        this.data = data;
+        this.dataPublicacao = dataPublicacao;
     }
 
     public Integer getId() {
@@ -83,11 +86,11 @@ public class Noticia {
         this.fonte = fonte;
     }
 
-    public LocalDateTime getData() {
-        return data;
+    public LocalDateTime getDataPublicacao() {
+        return dataPublicacao;
     }
 
-    public void setData(LocalDateTime data) {
-        this.data = data;
+    public void setDataPublicacao(LocalDateTime dataPublicacao) {
+        this.dataPublicacao = dataPublicacao;
     }
 }
