@@ -82,7 +82,7 @@ public class NoticiaController {
             return ResponseEntity.status(400).body("Autor não pode estar nulo ou vazio");
 
         if (noticiaRepository.hasIgual(noticia)) return ResponseEntity.status(409).body("Já " +
-                "existe uma notícia cadastrada com esse título!");
+                "existe uma notícia com essas informações!");
 
         return ResponseEntity.status(200).body(noticiaRepository.editarNoticia(id, noticia));
     }

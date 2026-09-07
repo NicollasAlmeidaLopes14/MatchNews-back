@@ -98,10 +98,18 @@ public class NoticiaRepository {
     }
 
     public Boolean hasIgual(Noticia noticia) {
-        String sql = "SELECT COUNT(*) FROM noticias WHERE lower(titulo) = ?";
+        String sql = "SELECT COUNT(*) FROM noticias WHERE lower(titulo) = ? AND lower(resumo) = ?" +
+                " AND lower(texto) = ? AND lower(categoria) = ? AND lower(autor) = ? AND lower" +
+                "(fonte) = ?";
 
         Integer quantidade = jdbcTemplate.queryForObject(sql,
-                Integer.class, noticia.getTitulo().toLowerCase());
+                Integer.class,
+                noticia.getTitulo().toLowerCase(),
+                noticia.getResumo().toLowerCase(),
+                noticia.getTexto().toLowerCase(),
+                noticia.getCategoria().toLowerCase(),
+                noticia.getAutor().toLowerCase(),
+                noticia.getFonte().toLowerCase());
 
         return quantidade >= 1;
     }
