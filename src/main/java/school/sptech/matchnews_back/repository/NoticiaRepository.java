@@ -26,8 +26,10 @@ public class NoticiaRepository {
         novaNoticia.setDataPublicacao(dataAtual);
 
         String sql = "INSERT INTO noticias (titulo, resumo, texto,categoria,autor,fonte, " +
-                "dataPublicacao) " +
-                "VALUES (?,?,?,?,?,?, ?)";
+                "dataPublicacao, dataAtualizacao) " +
+                "VALUES (?,?,?,?,?,?, ?, ?)";
+
+        novaNoticia.setDataAtualizacao(null);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -40,6 +42,7 @@ public class NoticiaRepository {
             ps.setString(5, novaNoticia.getAutor());
             ps.setString(6, novaNoticia.getFonte());
             ps.setObject(7, novaNoticia.getDataPublicacao());
+            ps.setObject(8, novaNoticia.getDataAtualizacao());
             return ps;
         }, keyHolder);
 
@@ -59,24 +62,47 @@ public class NoticiaRepository {
                 new BeanPropertyRowMapper<>(Noticia.class));
     }
 
+    public Noticia editarNoticia(Integer id, Noticia noticiaAtualizada) {
+        LocalDateTime dataEdicao = LocalDateTime.now();
+        noticiaAtualizada.setDataAtualizacao(dataEdicao);
+
+        String sql = "UPDATE noticias SET titulo = ?, resumo = ?, texto = ?, categoria = ?, autor" +
+                " = ?, fonte = ?, dataAtualizacao = ? WHERE id = ?";
+
+        noticiaAtualizada.setId(id);
+
+        jdbcTemplate.update(sql,
+                noticiaAtualizada.getTitulo(),
+                noticiaAtualizada.getResumo(),
+                noticiaAtualizada.getTexto(),
+                noticiaAtualizada.getCategoria(),
+                noticiaAtualizada.getAutor(),
+                noticiaAtualizada.getFonte(),
+                noticiaAtualizada.getDataAtualizacao(),
+                id
+        );
+
+        return noticiaAtualizada;
+    }
+
     public void deletarNoticia(Integer id) {
         String sql = "DELETE FROM noticias WHERE id = ?";
 
         jdbcTemplate.update(sql, id);
     }
 
-//    public Boolean hasIgual(Noticia noticia) {
-//        String sql = "SELECT COUNT(*) FROM noticias WHERE lower(titulo) = ?";
-//
-//        Integer quantidade = jdbcTemplate.queryForObject(sql,
-//                new BeanPropertyRowMapper<>(Integer.class), noticia.getTitulo());
-//
-//        return quantidade >= 1;
-//    }
-
     public Noticia buscarPorId(Integer id) {
         String sql = "SELECT * FROM noticias WHERE id = ?";
 
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(Noticia.class), id);
+    }
+
+    public Boolean hasIgual(Noticia noticia) {
+        String sql = "SELECT COUNT(*) FROM noticias WHERE lower(titulo) = ?";
+
+        Integer quantidade = jdbcTemplate.queryForObject(sql,
+                Integer.class, noticia.getTitulo().toLowerCase());
+
+        return quantidade >= 1;
     }
 }

@@ -14,12 +14,15 @@ public class Noticia {
     private String fonte;
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataPublicacao;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dataAtualizacao;
 
     public Noticia() {
     }
 
     public Noticia(Integer id, String titulo, String resumo, String texto, String categoria,
-                   String autor, String fonte, LocalDateTime dataPublicacao) {
+                   String autor, String fonte, LocalDateTime dataPublicacao,
+                   LocalDateTime dataAtualizacao) {
         this.id = id;
         this.titulo = titulo;
         this.resumo = resumo;
@@ -28,6 +31,7 @@ public class Noticia {
         this.autor = autor;
         this.fonte = fonte;
         this.dataPublicacao = dataPublicacao;
+        this.dataAtualizacao = dataAtualizacao;
     }
 
     public Integer getId() {
@@ -92,5 +96,13 @@ public class Noticia {
 
     public void setDataPublicacao(LocalDateTime dataPublicacao) {
         this.dataPublicacao = dataPublicacao;
+    }
+
+    public LocalDateTime getDataAtualizacao() {
+        return dataAtualizacao;
+    }
+
+    public void setDataAtualizacao(LocalDateTime dataAtualizacao) {
+        this.dataAtualizacao = dataAtualizacao;
     }
 }

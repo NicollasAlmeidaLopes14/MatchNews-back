@@ -17,14 +17,6 @@ public class NoticiaController {
         this.noticiaRepository = repository;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Noticia>> listarTodos() {
-        List<Noticia> noticias = noticiaRepository.buscarTodas();
-
-        return !noticias.isEmpty() ? ResponseEntity.status(200).body(noticias) :
-                ResponseEntity.status(204).build();
-    }
-
 //    @GetMapping("/{id}")
 //    public ResponseEntity<Noticia> pegarPorId(@PathVariable Integer id) {
 //        try {
@@ -51,7 +43,48 @@ public class NoticiaController {
         if (noticia.getAutor() == null || noticia.getAutor().isBlank())
             return ResponseEntity.status(400).body("Autor não pode estar nulo ou vazio");
 
+        if (noticiaRepository.hasIgual(noticia)) return ResponseEntity.status(409).body("Não é " +
+                "possível cadastrar a mesma notícia");
+
         return ResponseEntity.status(201).body(noticiaRepository.cadastrar(noticia));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Noticia>> listarTodos() {
+        List<Noticia> noticias = noticiaRepository.buscarTodas();
+
+        return !noticias.isEmpty() ? ResponseEntity.status(200).body(noticias) :
+                ResponseEntity.status(204).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> atualizar(@PathVariable Integer id,
+                                       @RequestBody Noticia noticia) {
+        try {
+            noticiaRepository.buscarPorId(id);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).build();
+        }
+
+        if (noticia.getTitulo() == null || noticia.getTitulo().isBlank())
+            return ResponseEntity.status(400).body("Título não pode estar nulo ou vazio");
+
+        if (noticia.getResumo() == null || noticia.getResumo().isBlank())
+            return ResponseEntity.status(400).body("Resumo não pode estar nulo ou vazio");
+
+        if (noticia.getTexto() == null || noticia.getTexto().isBlank())
+            return ResponseEntity.status(400).body("Texto não pode estar nulo ou vazio");
+
+        if (noticia.getCategoria() == null || noticia.getCategoria().isBlank())
+            return ResponseEntity.status(400).body("Categoria não foi selecionada");
+
+        if (noticia.getAutor() == null || noticia.getAutor().isBlank())
+            return ResponseEntity.status(400).body("Autor não pode estar nulo ou vazio");
+
+        if (noticiaRepository.hasIgual(noticia)) return ResponseEntity.status(409).body("Já " +
+                "existe uma notícia cadastrada com esse título!");
+
+        return ResponseEntity.status(200).body(noticiaRepository.editarNoticia(id, noticia));
     }
 
     @DeleteMapping("/{id}")
